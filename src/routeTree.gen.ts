@@ -11,6 +11,13 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppRouteImport } from './routes/_app'
+import { Route as AppIndexRouteImport } from './routes/_app.index'
+import { Route as AppTestRouteImport } from './routes/_app.test'
+import { Route as AppSessioniRouteImport } from './routes/_app.sessioni'
+import { Route as AppPagamentiRouteImport } from './routes/_app.pagamenti'
+import { Route as AppLogRouteImport } from './routes/_app.log'
+import { Route as AppCandidatiIndexRouteImport } from './routes/_app.candidati.index'
+import { Route as AppCandidatiIdRouteImport } from './routes/_app.candidati.$id'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -21,30 +28,110 @@ const AppRoute = AppRouteImport.update({
   id: '/_app',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppTestRoute = AppTestRouteImport.update({
+  id: '/test',
+  path: '/test',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSessioniRoute = AppSessioniRouteImport.update({
+  id: '/sessioni',
+  path: '/sessioni',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPagamentiRoute = AppPagamentiRouteImport.update({
+  id: '/pagamenti',
+  path: '/pagamenti',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLogRoute = AppLogRouteImport.update({
+  id: '/log',
+  path: '/log',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCandidatiIndexRoute = AppCandidatiIndexRouteImport.update({
+  id: '/candidati/',
+  path: '/candidati/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCandidatiIdRoute = AppCandidatiIdRouteImport.update({
+  id: '/candidati/$id',
+  path: '/candidati/$id',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof AppRoute
+  '/': typeof AppIndexRoute
   '/login': typeof LoginRoute
+  '/log': typeof AppLogRoute
+  '/pagamenti': typeof AppPagamentiRoute
+  '/sessioni': typeof AppSessioniRoute
+  '/test': typeof AppTestRoute
+  '/candidati/$id': typeof AppCandidatiIdRoute
+  '/candidati/': typeof AppCandidatiIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof AppRoute
   '/login': typeof LoginRoute
+  '/log': typeof AppLogRoute
+  '/pagamenti': typeof AppPagamentiRoute
+  '/sessioni': typeof AppSessioniRoute
+  '/test': typeof AppTestRoute
+  '/': typeof AppIndexRoute
+  '/candidati/$id': typeof AppCandidatiIdRoute
+  '/candidati': typeof AppCandidatiIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/_app': typeof AppRoute
+  '/_app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
+  '/_app/log': typeof AppLogRoute
+  '/_app/pagamenti': typeof AppPagamentiRoute
+  '/_app/sessioni': typeof AppSessioniRoute
+  '/_app/test': typeof AppTestRoute
+  '/_app/': typeof AppIndexRoute
+  '/_app/candidati/$id': typeof AppCandidatiIdRoute
+  '/_app/candidati/': typeof AppCandidatiIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/log'
+    | '/pagamenti'
+    | '/sessioni'
+    | '/test'
+    | '/candidati/$id'
+    | '/candidati/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login'
-  id: '__root__' | '/_app' | '/login'
+  to:
+    | '/login'
+    | '/log'
+    | '/pagamenti'
+    | '/sessioni'
+    | '/test'
+    | '/'
+    | '/candidati/$id'
+    | '/candidati'
+  id:
+    | '__root__'
+    | '/_app'
+    | '/login'
+    | '/_app/log'
+    | '/_app/pagamenti'
+    | '/_app/sessioni'
+    | '/_app/test'
+    | '/_app/'
+    | '/_app/candidati/$id'
+    | '/_app/candidati/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  AppRoute: typeof AppRoute
+  AppRoute: typeof AppRouteWithChildren
   LoginRoute: typeof LoginRoute
 }
 
@@ -64,11 +151,82 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app/': {
+      id: '/_app/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/test': {
+      id: '/_app/test'
+      path: '/test'
+      fullPath: '/test'
+      preLoaderRoute: typeof AppTestRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/sessioni': {
+      id: '/_app/sessioni'
+      path: '/sessioni'
+      fullPath: '/sessioni'
+      preLoaderRoute: typeof AppSessioniRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/pagamenti': {
+      id: '/_app/pagamenti'
+      path: '/pagamenti'
+      fullPath: '/pagamenti'
+      preLoaderRoute: typeof AppPagamentiRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/log': {
+      id: '/_app/log'
+      path: '/log'
+      fullPath: '/log'
+      preLoaderRoute: typeof AppLogRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/candidati/': {
+      id: '/_app/candidati/'
+      path: '/candidati'
+      fullPath: '/candidati/'
+      preLoaderRoute: typeof AppCandidatiIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/candidati/$id': {
+      id: '/_app/candidati/$id'
+      path: '/candidati/$id'
+      fullPath: '/candidati/$id'
+      preLoaderRoute: typeof AppCandidatiIdRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
+interface AppRouteChildren {
+  AppLogRoute: typeof AppLogRoute
+  AppPagamentiRoute: typeof AppPagamentiRoute
+  AppSessioniRoute: typeof AppSessioniRoute
+  AppTestRoute: typeof AppTestRoute
+  AppIndexRoute: typeof AppIndexRoute
+  AppCandidatiIdRoute: typeof AppCandidatiIdRoute
+  AppCandidatiIndexRoute: typeof AppCandidatiIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppLogRoute: AppLogRoute,
+  AppPagamentiRoute: AppPagamentiRoute,
+  AppSessioniRoute: AppSessioniRoute,
+  AppTestRoute: AppTestRoute,
+  AppIndexRoute: AppIndexRoute,
+  AppCandidatiIdRoute: AppCandidatiIdRoute,
+  AppCandidatiIndexRoute: AppCandidatiIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  AppRoute: AppRoute,
+  AppRoute: AppRouteWithChildren,
   LoginRoute: LoginRoute,
 }
 export const routeTree = rootRouteImport
