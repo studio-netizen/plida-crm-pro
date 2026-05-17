@@ -3,14 +3,15 @@ import { LayoutDashboard, Users, CalendarDays, Wallet, FileCheck2, History, LogO
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 
-const NAV = [
+type NavItem = { to: string; label: string; icon: typeof LayoutDashboard; exact?: boolean };
+const NAV: NavItem[] = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { to: "/candidati", label: "Candidati", icon: Users },
   { to: "/sessioni", label: "Sessioni", icon: CalendarDays },
   { to: "/pagamenti", label: "Pagamenti", icon: Wallet },
   { to: "/test", label: "Test preliminari", icon: FileCheck2 },
   { to: "/log", label: "Audit log", icon: History },
-] as const;
+];
 
 export function AppSidebar() {
   const path = useRouterState({ select: (s) => s.location.pathname });
