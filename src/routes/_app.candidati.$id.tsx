@@ -93,10 +93,17 @@ function CandidatoDetailPage() {
         <TabsList>
           <TabsTrigger value="anagrafica">Anagrafica</TabsTrigger>
           <TabsTrigger value="profilo" disabled>Profilo linguistico</TabsTrigger>
-          <TabsTrigger value="iscrizioni" disabled>Iscrizioni</TabsTrigger>
-          <TabsTrigger value="pagamenti" disabled>Pagamenti</TabsTrigger>
+          <TabsTrigger value="iscrizioni">Iscrizioni</TabsTrigger>
+          <TabsTrigger value="pagamenti">Pagamenti</TabsTrigger>
           <TabsTrigger value="log" disabled>Note & Log</TabsTrigger>
         </TabsList>
+
+        <TabsContent value="iscrizioni">
+          <IscrizioniTab candidatoId={id} />
+        </TabsContent>
+        <TabsContent value="pagamenti">
+          <PagamentiTab candidatoId={id} />
+        </TabsContent>
 
         <TabsContent value="anagrafica">
           <Card>

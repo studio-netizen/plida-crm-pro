@@ -17,6 +17,7 @@ import { Route as AppSessioniRouteImport } from './routes/_app.sessioni'
 import { Route as AppPagamentiRouteImport } from './routes/_app.pagamenti'
 import { Route as AppLogRouteImport } from './routes/_app.log'
 import { Route as AppCandidatiIndexRouteImport } from './routes/_app.candidati.index'
+import { Route as AppSessioniIdRouteImport } from './routes/_app.sessioni.$id'
 import { Route as AppCandidatiIdRouteImport } from './routes/_app.candidati.$id'
 
 const LoginRoute = LoginRouteImport.update({
@@ -58,6 +59,11 @@ const AppCandidatiIndexRoute = AppCandidatiIndexRouteImport.update({
   path: '/candidati/',
   getParentRoute: () => AppRoute,
 } as any)
+const AppSessioniIdRoute = AppSessioniIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AppSessioniRoute,
+} as any)
 const AppCandidatiIdRoute = AppCandidatiIdRouteImport.update({
   id: '/candidati/$id',
   path: '/candidati/$id',
@@ -69,19 +75,21 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/log': typeof AppLogRoute
   '/pagamenti': typeof AppPagamentiRoute
-  '/sessioni': typeof AppSessioniRoute
+  '/sessioni': typeof AppSessioniRouteWithChildren
   '/test': typeof AppTestRoute
   '/candidati/$id': typeof AppCandidatiIdRoute
+  '/sessioni/$id': typeof AppSessioniIdRoute
   '/candidati/': typeof AppCandidatiIndexRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/log': typeof AppLogRoute
   '/pagamenti': typeof AppPagamentiRoute
-  '/sessioni': typeof AppSessioniRoute
+  '/sessioni': typeof AppSessioniRouteWithChildren
   '/test': typeof AppTestRoute
   '/': typeof AppIndexRoute
   '/candidati/$id': typeof AppCandidatiIdRoute
+  '/sessioni/$id': typeof AppSessioniIdRoute
   '/candidati': typeof AppCandidatiIndexRoute
 }
 export interface FileRoutesById {
@@ -90,10 +98,11 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/_app/log': typeof AppLogRoute
   '/_app/pagamenti': typeof AppPagamentiRoute
-  '/_app/sessioni': typeof AppSessioniRoute
+  '/_app/sessioni': typeof AppSessioniRouteWithChildren
   '/_app/test': typeof AppTestRoute
   '/_app/': typeof AppIndexRoute
   '/_app/candidati/$id': typeof AppCandidatiIdRoute
+  '/_app/sessioni/$id': typeof AppSessioniIdRoute
   '/_app/candidati/': typeof AppCandidatiIndexRoute
 }
 export interface FileRouteTypes {
@@ -106,6 +115,7 @@ export interface FileRouteTypes {
     | '/sessioni'
     | '/test'
     | '/candidati/$id'
+    | '/sessioni/$id'
     | '/candidati/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -116,6 +126,7 @@ export interface FileRouteTypes {
     | '/test'
     | '/'
     | '/candidati/$id'
+    | '/sessioni/$id'
     | '/candidati'
   id:
     | '__root__'
@@ -127,6 +138,7 @@ export interface FileRouteTypes {
     | '/_app/test'
     | '/_app/'
     | '/_app/candidati/$id'
+    | '/_app/sessioni/$id'
     | '/_app/candidati/'
   fileRoutesById: FileRoutesById
 }
@@ -193,6 +205,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCandidatiIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/sessioni/$id': {
+      id: '/_app/sessioni/$id'
+      path: '/$id'
+      fullPath: '/sessioni/$id'
+      preLoaderRoute: typeof AppSessioniIdRouteImport
+      parentRoute: typeof AppSessioniRoute
+    }
     '/_app/candidati/$id': {
       id: '/_app/candidati/$id'
       path: '/candidati/$id'
@@ -203,10 +222,22 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AppSessioniRouteChildren {
+  AppSessioniIdRoute: typeof AppSessioniIdRoute
+}
+
+const AppSessioniRouteChildren: AppSessioniRouteChildren = {
+  AppSessioniIdRoute: AppSessioniIdRoute,
+}
+
+const AppSessioniRouteWithChildren = AppSessioniRoute._addFileChildren(
+  AppSessioniRouteChildren,
+)
+
 interface AppRouteChildren {
   AppLogRoute: typeof AppLogRoute
   AppPagamentiRoute: typeof AppPagamentiRoute
-  AppSessioniRoute: typeof AppSessioniRoute
+  AppSessioniRoute: typeof AppSessioniRouteWithChildren
   AppTestRoute: typeof AppTestRoute
   AppIndexRoute: typeof AppIndexRoute
   AppCandidatiIdRoute: typeof AppCandidatiIdRoute
@@ -216,7 +247,7 @@ interface AppRouteChildren {
 const AppRouteChildren: AppRouteChildren = {
   AppLogRoute: AppLogRoute,
   AppPagamentiRoute: AppPagamentiRoute,
-  AppSessioniRoute: AppSessioniRoute,
+  AppSessioniRoute: AppSessioniRouteWithChildren,
   AppTestRoute: AppTestRoute,
   AppIndexRoute: AppIndexRoute,
   AppCandidatiIdRoute: AppCandidatiIdRoute,
@@ -232,13 +263,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
