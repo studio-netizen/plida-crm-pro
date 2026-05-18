@@ -123,7 +123,11 @@ function CandidatoDetailPage() {
 
   const toggleFlag = useMutation({
     mutationFn: async (v: { key: "flag_fragile" | "flag_urgenza_scadenza" | "flag_tenere_occhio" | "flag_gia_cliente"; value: boolean }) => {
-      const patch: Record<string, boolean> = { [v.key]: v.value };
+      const patch =
+        v.key === "flag_fragile" ? { flag_fragile: v.value } :
+        v.key === "flag_urgenza_scadenza" ? { flag_urgenza_scadenza: v.value } :
+        v.key === "flag_tenere_occhio" ? { flag_tenere_occhio: v.value } :
+        { flag_gia_cliente: v.value };
       const { error } = await supabase.from("candidati").update(patch).eq("id", id);
       if (error) throw error;
     },
