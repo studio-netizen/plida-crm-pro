@@ -52,51 +52,146 @@ export type Database = {
       }
       candidati: {
         Row: {
+          canale_preferito:
+            | Database["public"]["Enums"]["canale_comunicazione"]
+            | null
+          citta_residenza: string | null
+          codice_fiscale: string | null
           cognome: string
+          comunicare_con_referente: boolean
           created_at: string
           created_by: string | null
           data_nascita: string | null
           email: string | null
+          fascia_oraria_preferita:
+            | Database["public"]["Enums"]["fascia_oraria"]
+            | null
+          flag_fragile: boolean
+          flag_gia_cliente: boolean
+          flag_tenere_occhio: boolean
+          flag_urgenza_scadenza: boolean
           id: string
           lingua_madre: string | null
+          lingua_preferita: string | null
           luogo_nascita: string | null
+          nazionalita: string | null
           nome: string
           note_generali: string | null
+          obiettivo_livello: Database["public"]["Enums"]["livello_esame"] | null
+          obiettivo_motivazione:
+            | Database["public"]["Enums"]["motivazione_esame"]
+            | null
+          obiettivo_scadenza: string | null
+          obiettivo_scadenza_nota: string | null
+          obiettivo_tipo_esame: Database["public"]["Enums"]["tipo_esame"] | null
           paese_origine: string | null
+          referente_email: string | null
+          referente_nome: string | null
+          referente_relazione:
+            | Database["public"]["Enums"]["relazione_referente"]
+            | null
+          referente_telefono: string | null
+          sesso: Database["public"]["Enums"]["sesso_candidato"] | null
           telefono: string | null
           titolo_studi: string | null
           updated_at: string
           updated_by: string | null
         }
         Insert: {
+          canale_preferito?:
+            | Database["public"]["Enums"]["canale_comunicazione"]
+            | null
+          citta_residenza?: string | null
+          codice_fiscale?: string | null
           cognome: string
+          comunicare_con_referente?: boolean
           created_at?: string
           created_by?: string | null
           data_nascita?: string | null
           email?: string | null
+          fascia_oraria_preferita?:
+            | Database["public"]["Enums"]["fascia_oraria"]
+            | null
+          flag_fragile?: boolean
+          flag_gia_cliente?: boolean
+          flag_tenere_occhio?: boolean
+          flag_urgenza_scadenza?: boolean
           id?: string
           lingua_madre?: string | null
+          lingua_preferita?: string | null
           luogo_nascita?: string | null
+          nazionalita?: string | null
           nome: string
           note_generali?: string | null
+          obiettivo_livello?:
+            | Database["public"]["Enums"]["livello_esame"]
+            | null
+          obiettivo_motivazione?:
+            | Database["public"]["Enums"]["motivazione_esame"]
+            | null
+          obiettivo_scadenza?: string | null
+          obiettivo_scadenza_nota?: string | null
+          obiettivo_tipo_esame?:
+            | Database["public"]["Enums"]["tipo_esame"]
+            | null
           paese_origine?: string | null
+          referente_email?: string | null
+          referente_nome?: string | null
+          referente_relazione?:
+            | Database["public"]["Enums"]["relazione_referente"]
+            | null
+          referente_telefono?: string | null
+          sesso?: Database["public"]["Enums"]["sesso_candidato"] | null
           telefono?: string | null
           titolo_studi?: string | null
           updated_at?: string
           updated_by?: string | null
         }
         Update: {
+          canale_preferito?:
+            | Database["public"]["Enums"]["canale_comunicazione"]
+            | null
+          citta_residenza?: string | null
+          codice_fiscale?: string | null
           cognome?: string
+          comunicare_con_referente?: boolean
           created_at?: string
           created_by?: string | null
           data_nascita?: string | null
           email?: string | null
+          fascia_oraria_preferita?:
+            | Database["public"]["Enums"]["fascia_oraria"]
+            | null
+          flag_fragile?: boolean
+          flag_gia_cliente?: boolean
+          flag_tenere_occhio?: boolean
+          flag_urgenza_scadenza?: boolean
           id?: string
           lingua_madre?: string | null
+          lingua_preferita?: string | null
           luogo_nascita?: string | null
+          nazionalita?: string | null
           nome?: string
           note_generali?: string | null
+          obiettivo_livello?:
+            | Database["public"]["Enums"]["livello_esame"]
+            | null
+          obiettivo_motivazione?:
+            | Database["public"]["Enums"]["motivazione_esame"]
+            | null
+          obiettivo_scadenza?: string | null
+          obiettivo_scadenza_nota?: string | null
+          obiettivo_tipo_esame?:
+            | Database["public"]["Enums"]["tipo_esame"]
+            | null
           paese_origine?: string | null
+          referente_email?: string | null
+          referente_nome?: string | null
+          referente_relazione?:
+            | Database["public"]["Enums"]["relazione_referente"]
+            | null
+          referente_telefono?: string | null
+          sesso?: Database["public"]["Enums"]["sesso_candidato"] | null
           telefono?: string | null
           titolo_studi?: string | null
           updated_at?: string
@@ -448,10 +543,26 @@ export type Database = {
       is_operatrice: { Args: never; Returns: boolean }
     }
     Enums: {
+      canale_comunicazione: "whatsapp" | "email" | "telefono"
+      fascia_oraria: "mattina" | "pomeriggio" | "indifferente"
       giorno_orale: "lun" | "mar" | "mer" | "gio" | "ven" | "sab"
       livello_esame: "A2" | "B1" | "B2" | "C1"
       metodo_pagamento: "bonifico" | "contante"
+      motivazione_esame:
+        | "cittadinanza"
+        | "lavoro"
+        | "studio"
+        | "ricongiungimento"
+        | "altro"
       operazione_audit: "INSERT" | "UPDATE" | "DELETE"
+      relazione_referente:
+        | "moglie"
+        | "marito"
+        | "figlio"
+        | "datore_lavoro"
+        | "insegnante"
+        | "altro"
+      sesso_candidato: "M" | "F" | "altro"
       stato_portale: "da_inserire" | "inserito"
       tipo_esame: "PLIDA" | "CILS" | "CELI"
       tipo_iscrizione: "completo" | "recupero" | "urgenza"
@@ -582,10 +693,28 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      canale_comunicazione: ["whatsapp", "email", "telefono"],
+      fascia_oraria: ["mattina", "pomeriggio", "indifferente"],
       giorno_orale: ["lun", "mar", "mer", "gio", "ven", "sab"],
       livello_esame: ["A2", "B1", "B2", "C1"],
       metodo_pagamento: ["bonifico", "contante"],
+      motivazione_esame: [
+        "cittadinanza",
+        "lavoro",
+        "studio",
+        "ricongiungimento",
+        "altro",
+      ],
       operazione_audit: ["INSERT", "UPDATE", "DELETE"],
+      relazione_referente: [
+        "moglie",
+        "marito",
+        "figlio",
+        "datore_lavoro",
+        "insegnante",
+        "altro",
+      ],
+      sesso_candidato: ["M", "F", "altro"],
       stato_portale: ["da_inserire", "inserito"],
       tipo_esame: ["PLIDA", "CILS", "CELI"],
       tipo_iscrizione: ["completo", "recupero", "urgenza"],
